@@ -1,5 +1,5 @@
 
-const url = 'ws://broker.emqx.io:8083/mqtt'
+const url = 'wss://broker.emqx.io:8083/mqtt'
 // Create an MQTT client instance
 const options = {
     // Clean session
@@ -8,7 +8,7 @@ const options = {
     // Authentication
 }
 // Tạo một đối tượng kết nối MQTT mqtt://broker.mqttdashboard.com:8000
-var client = mqtt.connect('ws://broker.mqttdashboard.com:8000/mqtt', options);
+var client = mqtt.connect('wss://broker.mqttdashboard.com:8000/mqtt', options);
 
 // Xử lý sự kiện khi kết nối thành công
 client.on('connect', function () {
