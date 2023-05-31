@@ -5,10 +5,11 @@ const options = {
     // Clean session
     clean: true,
     connectTimeout: 4000,
+    rejectUnauthorized: false
     // Authentication
 }
-// Tạo một đối tượng kết nối MQTT mqtt://broker.mqttdashboard.com:8000
-var client = mqtt.connect('wss://broker.mqttdashboard.com:8000/mqtt', options);
+// Tạo một đối tượng kết nối MQTT ws://broker.mqttdashboard.com:8884/mqtt
+var client = mqtt.connect('wss://mqtt-dashboard.com:8884/mqtt', options);
 
 // Xử lý sự kiện khi kết nối thành công
 client.on('connect', function () {
