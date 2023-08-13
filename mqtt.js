@@ -1,11 +1,17 @@
 
 const url = 'wss://broker.emqx.io:8083/mqtt'
+var checkConnect = false;
+var MoistureInput = document.querySelector("#Moisture");
+var RainfallInput = document.querySelector("#Rainfall");
+var AccelerationInput = document.querySelector("#Acceleration");
+var IDNodeInput = document.querySelector(".select-node-thresh");
 // Create an MQTT client instance
 const options = {
     // Clean session
     clean: true,
     connectTimeout: 4000,
-    rejectUnauthorized: false
+    rejectUnauthorized: false,
+    clientId: 'androidClientId2',
     // Authentication
 }
 // Tạo một đối tượng kết nối MQTT ws://broker.mqttdashboard.com:8884/mqtt
@@ -14,19 +20,71 @@ var client = mqtt.connect('wss://mqtt-dashboard.com:8884/mqtt', options);
 // Xử lý sự kiện khi kết nối thành công
 client.on('connect', function () {
     console.log('Đã kết nối thành công đến MQTT Broker');
-
+    checkConnect = true;
     // Đăng ký để nhận các tin nhắn từ một chủ đề cụ thể
-    client.subscribe('topic1');
+    client.subscribe('/SatLoDat/Healthy');
+    //client.subscribe('home/element');
+    //client.publish('home/element', `Gateway led 1`);
+});
 
-    // Gửi một tin nhắn đến một chủ đề cụ thể
-    client.publish('topic1', 'Hello MQTT');
+/*============================STATE NODE REQUEST=================================*/
+var stateButton = document.getElementById("state-button");
+var tableDataState = document.querySelector(".data-state-table");
+var IDNodeSearchInput = document.querySelector("#select-node-state");
+stateButton.addEventListener("click", function () {
+    IDNodeSearchValue = IDNodeSearchInput.value;
+    var payload = `{"ID_Device":${IDNodeSearchValue}, "Moisture":0,"Rainfall":0, "Acceleration":0, "Battery":0, "Command":0}`;
+    if (checkConnect == true) {
+        // Gửi một tin nhắn đến một chủ đề cụ thể
+        client.publish('/SatLoDat/Command', `${payload}`);
+    }
 });
 
 // Xử lý sự kiện khi nhận được một tin nhắn
 client.on('message', function (topic, message) {
+    var date = new Date();
+    var options = {
+        timeZone: 'Asia/Ho_Chi_Minh',
+    };
+    // Lấy ngày tháng năm
+    var day = date.toLocaleDateString('en-US', options);
+    // Lấy giờ, phút, giây
+    var time = date.toLocaleTimeString('en-US', options);
+    const obj = JSON.parse(message.toString());
+    jQuery("#data-state-list").append(
+        " <tr>\n" +
+        "    <td>" + obj.ID_Device + "</td>\n" +
+        "    <td>" + obj.Moisture + "</td>\n" +
+        "    <td>" + obj.Rainfall + "</td>\n" +
+        "    <td>" + obj.Acceleration + "</td>\n" +
+        "    <td>" + obj.Battery + "</td>\n" +
+        "    <td>" + day + "</td>\n" +
+        "    <td>" + time + "</td>\n" +
+        "</tr>"
+    );
+    tableDataState.style.display = "block";
     console.log('Nhận được tin nhắn từ chủ đề:', topic, ' - Nội dung:', message.toString());
 });
+/*=========================== SETUP THRESHOLD NODE REQUEST=================================*/
+var setupButton = document.getElementById("setup-button");
+var MoistureInput = document.querySelector("#Moisture");
+var RainfallInput = document.querySelector("#Rainfall");
+var AccelerationInput = document.querySelector("#Acceleration");
+var IDNodeInput = document.querySelector(".select-node-thresh");
+setupButton.addEventListener("click", function () {
+    let MoistureValue = MoistureInput.value;
+    let RainfallValue = RainfallInput.value;
+    let AccelerationValue = AccelerationInput.value;
+    let IDNodeValue = IDNodeInput.value;
+    var payload = `{"ID_Device":${IDNodeValue}, "Moisture":${MoistureValue},"Rainfall":${RainfallValue}, "Acceleration":${AccelerationValue}, "Battery":0, "Command":3}`;
+    if (checkConnect == true) {
+        // Gửi một tin nhắn đến một chủ đề cụ thể
+        client.publish('/SatLoDat/Command', `${payload}`);
+    }
+});
 
+
+/*============================STATE MQTT BROKER=================================*/
 // Xử lý sự kiện khi mất kết nối
 client.on('offline', function () {
     console.log('Đã mất kết nối đến MQTT Broker');

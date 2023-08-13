@@ -1042,6 +1042,7 @@ input:checked+label {
     margin: 0 auto;
 }
 
+
 .data-state-table {
     padding-top: 50px;
     display: none;
@@ -1065,6 +1066,24 @@ th {
     background-color: #f2f2f2;
 }
 
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+}
+
+input[type="text"]:focus {
+    border-color: #ff5722;
+}
 
 /*===================================Account ==========================*/
 .logo {
@@ -1114,6 +1133,13 @@ th {
     margin-bottom: 8px;
     width: 100%;
 }
+
+
+#chart-container {
+    display: none;
+    margin-top: 50px;
+}
+
 
 /* ==========================MEDIA QUERIES================== */
 

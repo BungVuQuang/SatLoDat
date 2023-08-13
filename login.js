@@ -34,7 +34,7 @@ function log() {
             // Đăng nhập thành công
             var user = userCredential.user;
             alert("Đăng nhập thành công:", user);
-            window.location.href = "index.html";
+            window.location.href = "main.html";
             // Thực hiện các hành động sau khi đăng nhập thành công
             // Ví dụ: chuyển hướng đến trang chính, hiển thị dữ liệu, v.v.
         })
